@@ -1,0 +1,11 @@
+{
+  "name": "RRM",
+  "version": "1.0.0",
+  "description": "request-response-manager for bi-directional transports",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Stormking",
+  "license": "ISC"
+}
