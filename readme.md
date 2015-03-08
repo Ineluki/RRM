@@ -1,6 +1,6 @@
 # RRM
 
-RRM (Request-Response-Manager) is a tiny tool to facilitate request & response on dual-channel transports, such as websockets, webworkers or webrtc.
+RRM (Request-Response-Manager) is a tiny tool to facilitate request & response on bi-directional transports, such as websockets, webworkers or webrtc.
 
 Uses promises for async flow.
 
@@ -11,7 +11,7 @@ Uses promises for async flow.
 * wildcards as fallback or default handler
 * timeouts
 
-## Requirements
+## Env-Requirements
 
 - Promises 
 - Browserify for usage in browser
