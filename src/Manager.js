@@ -46,13 +46,19 @@ RequestManager.prototype.handleRequest = function(data) {
                 id : data.id
             };
             if (!handler) {
-                answer.error = RequestManager.ERR_NO_HANDLER+data.action;
+                answer.error = {
+                    error : RequestManager.ERR_NO_HANDLER,
+                    action : data.action
+                };
                 reply(answer);
             } else {
                 //@TODO: check if already in progress to handle
                 var p = handler(data.data, data.action);
                 if (!(p && p.constructor && p.constructor.name === 'Promise')) {
-                    answer.error = RequestManager.ERR_INT_HANDLER;
+                    answer.error = {
+                        error : RequestManager.ERR_INT_HANDLER,
+                        action : data.action
+                    };
                     reply(answer);
                     return;
                 }
@@ -85,7 +91,10 @@ RequestManager.prototype.createRequest = function(action, data, timeout) {
     var ths = this;
     if (timeout) {
         setTimeout(function(){
-            r.reject(RequestManager.ERR_TIMEOUT);
+            r.reject({
+                error : RequestManager.ERR_TIMEOUT,
+                action : action
+            });
             ths.removeRequest(r.id);
         },timeout);
     }

@@ -5,17 +5,15 @@ var assert = require("assert");
 describe('RRM', function(){
 
     var a = new RRM(function(reply){
-       setTimeout(function(){ b.handle(reply); },123);
+        setTimeout(function(){ b.handle(reply); },123);
     });
 
     var b = new RRM(function(reply){
-       setTimeout(function(){ a.handle(reply); },123);
+        setTimeout(function(){ a.handle(reply); },123);
     });
 
     b.setHandler("echo-test",function(data){
-       return new Promise(function(res,rej){
-           res(data);
-       });
+        return Promise.resolve(data);
     });
 
     describe('request-response', function(){
@@ -33,7 +31,7 @@ describe('RRM', function(){
                 .then(function(){
                     done("did not fail!");
                 },function(err){
-                    assert.equal(err,RRM.ERR_NO_HANDLER+action);
+                    assert.equal(err.error,RRM.ERR_NO_HANDLER);
                     done();
                 });
         });
@@ -42,9 +40,22 @@ describe('RRM', function(){
                 .then(function(){
                     done("no timeout");
                 },function(err){
-                    assert.equal(err,RRM.ERR_TIMEOUT);
+                    assert.equal(err.error,RRM.ERR_TIMEOUT);
                     done();
                 });
+        });
+        it('can handle simultaneous requests',function(done){
+            var data = [5,2,8];
+            var wait = data.map(function(n){
+                return a.createRequest("echo-test",n,1000).then(function(data){
+                    if (data === n) return Promise.resolve(n);
+                    else return Promise.reject(n);
+                });
+            });
+            Promise.all(wait).then(function(data2){
+                assert.ok(data2);
+                done();
+            },done);
         });
     });
 
@@ -92,7 +103,7 @@ describe('RRM', function(){
                 .then(function(data){
                     done("no error!");
                 },function(err){
-                    assert.equal(err,RRM.ERR_INT_HANDLER);
+                    assert.equal(err.error,RRM.ERR_INT_HANDLER);
                     done();
                 });
         });

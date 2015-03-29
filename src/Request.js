@@ -31,7 +31,7 @@ Request.prototype.finish = function(response) {
 var counter = 0;
 
 Request.getId = function() {
-    return "" + (new Date()).getTime() + "-" + counter;
+    return "" + (new Date()).getTime() + "-" + (++counter);
 };
 
 module.exports = Request;
